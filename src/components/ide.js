@@ -1,6 +1,6 @@
 import React from "react";
 import Editor from "@monaco-editor/react";
-import { Col, Container, Row } from "reactstrap";
+import { Button, Col, Container, Row, Input } from "reactstrap";
 
 const Ide = () => {
     const args = {
@@ -60,18 +60,33 @@ const Ide = () => {
         "wordWrapColumn": 80,
         "wordWrapMinified": true,
         "wrappingIndent": "none",
-         "theme": "vs-dark"
-      }
+        "theme": "vs-dark"
+    }
     return (<>
         <Container className="mt-5 pt-5">
             <Row>
                 <Col>
                     <Editor
-                        height="80vh"
+                        height="70vh"
                         defaultLanguage="python"
                         defaultValue="print('Hello, world')"
                         {...args}
                     />
+                </Col>
+            </Row>
+            <Row className="mt-3">
+                <Col>
+                    <Input
+                        id="exampleText"
+                        name="text"
+                        type="textarea"
+                    />
+                </Col>
+            </Row>
+            <Row className="mt-3">
+                <Col>
+                    <Button size="sm" className="float-end ms-2" color="success" outline>Submit</Button>
+                    <Button size="sm" className="float-end" color="primary" outline>Run</Button>
                 </Col>
             </Row>
         </Container>
