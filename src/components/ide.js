@@ -1,8 +1,19 @@
-import React from "react";
+import React, {useState} from "react";
 import Editor from "@monaco-editor/react";
-import { Button, Col, Container, Row, Input } from "reactstrap";
-
+import OutputWindow from "./outputWindow";
+import LanguageSelector from "./LanguageSelector";
+import ThemeSelector from "./ThemeSelector";
+import CustomInput from "./CustomInput";
+import { languageOptions } from "../constants/languageOptions";
+import { classnames } from "../utils/general";
 const Ide = () => {
+    const [theme, setTheme] = useState("cobalt");
+    const [customInput, setCustomInput] = useState();
+    const [code, setCode] = useState("");
+    const [outputDetails, setOutputDetails] = useState(null);
+    const [processing, setProcessing] = useState(null);
+    const [language, setLanguage] = useState(languageOptions[0]);
+
     const args = {
         "acceptSuggestionOnCommitCharacter": true,
         "acceptSuggestionOnEnter": "on",
@@ -63,33 +74,44 @@ const Ide = () => {
         "theme": "vs-dark"
     }
     return (<>
-        <Container className="mt-5 pt-5">
-            <Row>
-                <Col>
-                    <Editor
-                        height="70vh"
-                        defaultLanguage="python"
-                        defaultValue="print('Hello, world')"
-                        {...args}
+        <div className="flex flex-row">
+            <div className="px-4 py-2">
+                <LanguageSelector />
+            </div>
+            <div className="px-4 py-2">
+               <ThemeSelector theme={theme} handleThemeChange={() => {}}/>
+            </div>
+        </div>
+        <div className="flex flex-row space-x-4 items-start px-4 py-4">
+            <div className="flex flex-col w-full h-full justify-start items-end">
+                <Editor
+                    height="70vh"
+                    defaultLanguage="python"
+                    defaultValue="print('Hello, world')"
+                    {...args}
+                />
+            </div>
+            <div className="right-container flex flex-shrink-0 w-[30%] flex-col">
+                <OutputWindow></OutputWindow>
+                <div className="flex flex-col items-end">
+                    <CustomInput
+                        customInput={customInput}
+                        setCustomInput={setCustomInput}
                     />
-                </Col>
-            </Row>
-            <Row className="mt-3">
-                <Col>
-                    <Input
-                        id="exampleText"
-                        name="text"
-                        type="textarea"
-                    />
-                </Col>
-            </Row>
-            <Row className="mt-3">
-                <Col>
-                    <Button size="sm" className="float-end ms-2" color="success" outline>Submit</Button>
-                    <Button size="sm" className="float-end" color="primary" outline>Run</Button>
-                </Col>
-            </Row>
-        </Container>
+                    <button
+                        onClick={() => {}}
+                        disabled={!code}
+                        className={classnames(
+                            "mt-4 border-2 border-black z-10 rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] px-4 py-2 hover:shadow transition duration-200 bg-white flex-shrink-0",
+                            !code ? "opacity-50" : ""
+                        )}
+                    >
+                        {processing ? "Processing..." : "Compile and Execute"}
+                    </button>
+                </div>
+                {outputDetails && <OutputDetails outputDetails={outputDetails} />}
+            </div>
+        </div>
     </>)
 }
 
